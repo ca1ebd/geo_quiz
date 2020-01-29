@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Geo Quiz</string>
+    <string name="question1">Colorado School of Mines is located in South Bend, IN.</string>
+    <string name="question2">Caleb is a homie.</string>
+    <string name="question3">Mobile apps are easy</string>
+    <string name="falseString">False</string>
+    <string name="trueString">True</string>
+    <string name="score">Score: </string>
+    <string name="correct_toast">Your knowledge is undoubtedly top notch!</string>
+    <string name="incorrect_toast">You must consult the elders for additional training.</string>
+    <string name="prev_string"><![CDATA[<-]]></string>
+    <string name="next_string"><![CDATA[->]]></string>
+</resources>
