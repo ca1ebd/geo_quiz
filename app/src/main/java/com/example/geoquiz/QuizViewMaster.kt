@@ -1,6 +1,8 @@
 package com.example.geoquiz
 
-object QuizMaster {
+import androidx.lifecycle.ViewModel
+
+class QuizViewModel : ViewModel() {
 //    private val theQuestion = Question(R.string.question1, false)
     private val questionBank: MutableList<Question> = mutableListOf()
     private var score = 0

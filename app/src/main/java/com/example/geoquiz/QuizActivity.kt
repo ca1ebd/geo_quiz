@@ -6,12 +6,14 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import java.util.logging.Logger.global
 
 private const val LOG_TAG = "448.QuizActivity"
 
 class QuizActivity : AppCompatActivity() {
 
+    private lateinit var quizViewModel: QuizViewModel
     private lateinit var scoreTextView: TextView
     private lateinit var questionTextView: TextView
 
@@ -19,6 +21,9 @@ class QuizActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d(LOG_TAG, "onCreate() called")
         setContentView(R.layout.activity_quiz)
+
+        val factory = QuizViewModelFactory()
+        quizViewModel = ViewModelProvider(this@QuizActivity, factory).get(QuizViewModel::class.java)
 
         scoreTextView = findViewById(R.id.score_text_view)
         questionTextView = findViewById(R.id.question_text_view)
@@ -64,15 +69,15 @@ class QuizActivity : AppCompatActivity() {
 
     private fun updateQuestion() {
         setCurrentScoreText()
-        questionTextView.text = resources.getString(QuizMaster.currentQuestionTextId)
+        questionTextView.text = resources.getString(quizViewModel.currentQuestionTextId)
     }
 
     private fun setCurrentScoreText() {
-        scoreTextView.text = QuizMaster.currentScore.toString()
+        scoreTextView.text = quizViewModel.currentScore.toString()
     }
 
     private fun checkAnswer(answer: Boolean) {
-        val toastStringID: Int = when (QuizMaster.isAnswerCorrect(answer)){
+        val toastStringID: Int = when (quizViewModel.isAnswerCorrect(answer)){
             true -> R.string.correct_toast
             false -> R.string.incorrect_toast
         }
@@ -85,8 +90,8 @@ class QuizActivity : AppCompatActivity() {
 
     private fun moveToQuestion(direction: Int) {
         when(direction>0){
-            true -> QuizMaster.moveToNextQuestion()
-            false -> QuizMaster.moveToPreviousQuestion()
+            true -> quizViewModel.moveToNextQuestion()
+            false -> quizViewModel.moveToPreviousQuestion()
         }
         updateQuestion()
     }
