@@ -40,7 +40,6 @@
         android:layout_weight="1"
         android:gravity="center"
         app:autoSizeTextType="uniform"
-        app:autoSizeMaxTextSize="60sp"
         android:textAppearance="@style/quizMainText"
         tools:text="Question goes here" />
 

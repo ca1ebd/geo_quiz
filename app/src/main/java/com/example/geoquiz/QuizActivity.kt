@@ -2,6 +2,7 @@ package com.example.geoquiz
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -10,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import java.util.logging.Logger.global
 
 private const val LOG_TAG = "448.QuizActivity"
+private const val KEY_INDEX = "index"
+private const val KEY_SCORE = "score"
 
 class QuizActivity : AppCompatActivity() {
 
@@ -24,6 +27,9 @@ class QuizActivity : AppCompatActivity() {
 
         val factory = QuizViewModelFactory()
         quizViewModel = ViewModelProvider(this@QuizActivity, factory).get(QuizViewModel::class.java)
+
+        quizViewModel.currentQuestionIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?:0
+        quizViewModel.score = savedInstanceState?.getInt(KEY_SCORE, 0) ?:0
 
         scoreTextView = findViewById(R.id.score_text_view)
         questionTextView = findViewById(R.id.question_text_view)
@@ -95,5 +101,13 @@ class QuizActivity : AppCompatActivity() {
         }
         updateQuestion()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d(LOG_TAG, "onSaveInstanceState() called")
+        outState.putInt(KEY_INDEX, quizViewModel.currentQuestionIndex)
+        outState.putInt(KEY_SCORE, quizViewModel.currentScore)
+    }
+
 
 }

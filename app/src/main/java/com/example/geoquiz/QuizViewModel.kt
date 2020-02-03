@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 class QuizViewModel : ViewModel() {
 //    private val theQuestion = Question(R.string.question1, false)
     private val questionBank: MutableList<Question> = mutableListOf()
-    private var score = 0
-    private var currentQuestionIndex: Int = 0
+    public var score = 0
+    public var currentQuestionIndex: Int = 0
 
     init {
         questionBank.add(Question(R.string.question1, false))
@@ -24,6 +24,7 @@ class QuizViewModel : ViewModel() {
         get() = currentQuestion.isAnswerTrue
     val currentScore: Int
         get() = score
+
 
     fun isAnswerCorrect(check: Boolean): Boolean {
         if(check == currentQuestionAnswer){
