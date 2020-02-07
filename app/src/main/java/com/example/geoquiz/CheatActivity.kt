@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -17,12 +18,12 @@ import org.w3c.dom.Text
 private const val LOG_TAG = "448.CheatActivity"
 private const val EXTRA_ANSWER_IS_TRUE = "CORRECT_ANSWER_KEY"
 private const val EXTRA_HAS_CHEATED = "HAS_CHEATED_KEY"
-
-
+private const val USER_CHEATED_SAVE = "USER_CHEATED_SAVE_KEY"
 
 class CheatActivity : AppCompatActivity() {
 
     private lateinit var answerTextView: TextView
+    private var userCheated = false
 
     companion object {
 
@@ -43,6 +44,8 @@ class CheatActivity : AppCompatActivity() {
 
         val isAnswerTrue = intent.getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false)
 
+        userCheated = savedInstanceState?.getBoolean(USER_CHEATED_SAVE, false) ?:false
+
         answerTextView = findViewById(R.id.answer_text_view)
         answerTextView.text = when(isAnswerTrue){
             true -> getString(R.string.trueString)
@@ -52,7 +55,7 @@ class CheatActivity : AppCompatActivity() {
         val cheatButton = findViewById<Button>(R.id.show_answer_button)
         cheatButton.setOnClickListener {
             showAnswer()
-            setCheated()
+            userCheated = true
         }
 
     }
@@ -77,13 +80,16 @@ class CheatActivity : AppCompatActivity() {
         Log.d(LOG_TAG, "onResume() called")
     }
 
-
     override fun onPause() {
         Log.d(LOG_TAG, "onPause() called")
         super.onPause()
     }
 
     override fun onStop() {
+        //TODO figure out if this should go here or elsewhere...
+        when(userCheated){
+            true -> setCheated()
+        }
         Log.d(LOG_TAG, "onStop() called")
         super.onStop()
     }
@@ -91,6 +97,12 @@ class CheatActivity : AppCompatActivity() {
     override fun onDestroy() {
         Log.d(LOG_TAG, "onDestroy() called")
         super.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        Log.d(LOG_TAG, "onSaveInstanceState() called")
+        outState.putBoolean(USER_CHEATED_SAVE, userCheated)
     }
 
 }

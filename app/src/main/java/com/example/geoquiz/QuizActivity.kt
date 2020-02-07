@@ -70,7 +70,7 @@ class QuizActivity : AppCompatActivity() {
 
         if((resultCode == Activity.RESULT_OK) and (requestCode == REQUEST_CODE_CHEAT) and (data != null)){
             userDidCheat = CheatActivity.didUserCheat(data)
-            Log.d(LOG_TAG, "the user ${ when(didCheat){
+            Log.d(LOG_TAG, "the user ${ when(userDidCheat){
                 true -> "cheated"
                 false -> "did not cheat"
             } }")
