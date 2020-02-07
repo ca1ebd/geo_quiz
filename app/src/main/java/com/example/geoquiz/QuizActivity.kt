@@ -1,5 +1,6 @@
 package com.example.geoquiz
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -44,8 +45,18 @@ class QuizActivity : AppCompatActivity() {
         prevButton.setOnClickListener { moveToQuestion(-1) }
         nextButton.setOnClickListener { moveToQuestion(1) }
 
+        val cheatButton = findViewById<Button>(R.id.cheat_button)
+        cheatButton.setOnClickListener { launchCheat() }
+
         updateQuestion()
     }
+
+    private fun launchCheat() {
+        val intent = CheatActivity.createIntent(baseContext, quizViewModel.getCurrentAnswer())
+        startActivity(intent)
+    }
+
+
 
     override fun onStart() {
         super.onStart()

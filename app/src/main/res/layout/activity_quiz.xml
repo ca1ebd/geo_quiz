@@ -65,6 +65,13 @@
             android:text="@string/trueString" />
 
         <Button
+            android:id="@+id/cheat_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/cheat_button" />
+
+        <Button
             android:id="@+id/false_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

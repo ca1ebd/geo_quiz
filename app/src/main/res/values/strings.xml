@@ -10,4 +10,8 @@
     <string name="incorrect_toast">You must consult the elders for additional training.</string>
     <string name="prev_string"><![CDATA[<-]]></string>
     <string name="next_string"><![CDATA[->]]></string>
+    <string name="title_activity_cheat">CheatActivity</string>
+    <string name="cheat_question">Are you sure you want to cheat? There may be consequences...</string>
+    <string name="show_answer_button">Show the answer</string>
+    <string name="cheat_button">Cheat</string>
 </resources>
