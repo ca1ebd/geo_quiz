@@ -46,6 +46,10 @@ class CheatActivity : AppCompatActivity() {
 
         userCheated = savedInstanceState?.getBoolean(USER_CHEATED_SAVE, false) ?:false
 
+        if(userCheated){
+            setCheated()
+        }
+
         answerTextView = findViewById(R.id.answer_text_view)
         answerTextView.text = when(isAnswerTrue){
             true -> getString(R.string.trueString)
@@ -55,6 +59,7 @@ class CheatActivity : AppCompatActivity() {
         val cheatButton = findViewById<Button>(R.id.show_answer_button)
         cheatButton.setOnClickListener {
             showAnswer()
+            setCheated()
             userCheated = true
         }
 
@@ -65,8 +70,9 @@ class CheatActivity : AppCompatActivity() {
     }
 
     private fun setCheated() {
-        val intent = Intent(baseContext, QuizActivity::class.java)
-        intent.putExtra(EXTRA_HAS_CHEATED, true)
+        val intent = Intent(baseContext, QuizActivity::class.java).apply {
+            putExtra(EXTRA_HAS_CHEATED, true)
+        }
         setResult(Activity.RESULT_OK, intent)
     }
 
@@ -81,15 +87,16 @@ class CheatActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        if(userCheated){
+            setCheated()
+        }
         Log.d(LOG_TAG, "onPause() called")
         super.onPause()
     }
 
     override fun onStop() {
         //TODO figure out if this should go here or elsewhere...
-        when(userCheated){
-            true -> setCheated()
-        }
+
         Log.d(LOG_TAG, "onStop() called")
         super.onStop()
     }
@@ -99,8 +106,8 @@ class CheatActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         Log.d(LOG_TAG, "onSaveInstanceState() called")
         outState.putBoolean(USER_CHEATED_SAVE, userCheated)
     }

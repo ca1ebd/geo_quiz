@@ -38,6 +38,7 @@ class QuizActivity : AppCompatActivity() {
         quizViewModel.score = savedInstanceState?.getInt(KEY_SCORE, 0) ?:0
         userDidCheat = savedInstanceState?.getBoolean(KEY_DID_CHEAT, false) ?:false
 
+
         scoreTextView = findViewById(R.id.score_text_view)
         questionTextView = findViewById(R.id.question_text_view)
 
@@ -115,19 +116,22 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(answer: Boolean) {
-        when (userDidCheat) {
-            true -> Toast.makeText(baseContext, R.string.cheaters_no_prosper, Toast.LENGTH_SHORT).show()
+        if (userDidCheat) {
+            Toast.makeText(baseContext, R.string.cheaters_no_prosper, Toast.LENGTH_SHORT).show()
+        }
+        else{
+            val toastStringID: Int = when (quizViewModel.isAnswerCorrect(answer)){
+                true -> R.string.correct_toast
+                false -> R.string.incorrect_toast
+            }
+            //show toast
+            Toast.makeText(baseContext, toastStringID, Toast.LENGTH_SHORT).show()
+
+            //update the score
+            setCurrentScoreText()
         }
 
-        val toastStringID: Int = when (quizViewModel.isAnswerCorrect(answer)){
-            true -> R.string.correct_toast
-            false -> R.string.incorrect_toast
-        }
-        //show toast
-        Toast.makeText(baseContext, toastStringID, Toast.LENGTH_SHORT).show()
 
-        //update the score
-        setCurrentScoreText()
     }
 
     private fun moveToQuestion(direction: Int) {
