@@ -24,8 +24,6 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var scoreTextView: TextView
     private lateinit var questionTextView: TextView
 
-    private var userDidCheat = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(LOG_TAG, "onCreate() called")
@@ -36,7 +34,7 @@ class QuizActivity : AppCompatActivity() {
 
         quizViewModel.currentQuestionIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?:0
         quizViewModel.score = savedInstanceState?.getInt(KEY_SCORE, 0) ?:0
-        userDidCheat = savedInstanceState?.getBoolean(KEY_DID_CHEAT, false) ?:false
+//        userDidCheat = savedInstanceState?.getBoolean(KEY_DID_CHEAT, false) ?:false
 
 
         scoreTextView = findViewById(R.id.score_text_view)
@@ -70,12 +68,11 @@ class QuizActivity : AppCompatActivity() {
         Log.d(LOG_TAG, "onActivityResult() called (requestCode: %s, resultCode: %s)".format(requestCode, resultCode))
 
         if((resultCode == Activity.RESULT_OK) and (requestCode == REQUEST_CODE_CHEAT) and (data != null)){
-            userDidCheat = CheatActivity.didUserCheat(data)
-            Log.d(LOG_TAG, "the user ${ when(userDidCheat){
+            Log.d(LOG_TAG, "the user ${ when(CheatActivity.didUserCheat(data)){
                 true -> "cheated"
                 false -> "did not cheat"
             } }")
-
+            quizViewModel.didCheatOnQuestion = CheatActivity.didUserCheat(data)
 
         }
     }
@@ -116,7 +113,7 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(answer: Boolean) {
-        if (userDidCheat) {
+        if (quizViewModel.didCheatOnQuestion) {
             Toast.makeText(baseContext, R.string.cheaters_no_prosper, Toast.LENGTH_SHORT).show()
         }
         else{
@@ -139,7 +136,6 @@ class QuizActivity : AppCompatActivity() {
             true -> quizViewModel.moveToNextQuestion()
             false -> quizViewModel.moveToPreviousQuestion()
         }
-        userDidCheat = false
         updateQuestion()
     }
 
@@ -148,7 +144,6 @@ class QuizActivity : AppCompatActivity() {
         Log.d(LOG_TAG, "onSaveInstanceState() called")
         outState.putInt(KEY_INDEX, quizViewModel.currentQuestionIndex)
         outState.putInt(KEY_SCORE, quizViewModel.currentScore)
-        outState.putBoolean(KEY_DID_CHEAT, userDidCheat)
     }
 
 

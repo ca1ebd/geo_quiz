@@ -24,6 +24,9 @@ class QuizViewModel : ViewModel() {
         get() = currentQuestion.isAnswerTrue
     val currentScore: Int
         get() = score
+    var didCheatOnQuestion: Boolean
+        get() = currentQuestion.hasCheated
+        set(value) {currentQuestion.hasCheated = value}
 
 
     fun isAnswerCorrect(check: Boolean): Boolean {
