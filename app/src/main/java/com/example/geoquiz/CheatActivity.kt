@@ -1,5 +1,6 @@
 package com.example.geoquiz
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +16,7 @@ import org.w3c.dom.Text
 
 private const val LOG_TAG = "448.CheatActivity"
 private const val EXTRA_ANSWER_IS_TRUE = "CORRECT_ANSWER_KEY"
+private const val EXTRA_HAS_CHEATED = "HAS_CHEATED_KEY"
 
 
 
@@ -23,13 +25,16 @@ class CheatActivity : AppCompatActivity() {
     private lateinit var answerTextView: TextView
 
     companion object {
-        public fun createIntent(context: Context, isAnswerTrue: Boolean): Intent {
+
+        fun createIntent(context: Context, isAnswerTrue: Boolean): Intent {
             val intent = Intent(context, CheatActivity::class.java)
 
             //put boolean extra on intent
             intent.putExtra(EXTRA_ANSWER_IS_TRUE, isAnswerTrue)
             return intent
         }
+
+        fun didUserCheat(intent: Intent?): Boolean { return intent!!.getBooleanExtra(EXTRA_HAS_CHEATED, false) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +50,10 @@ class CheatActivity : AppCompatActivity() {
         }
 
         val cheatButton = findViewById<Button>(R.id.show_answer_button)
-        cheatButton.setOnClickListener { showAnswer() }
+        cheatButton.setOnClickListener {
+            showAnswer()
+            setCheated()
+        }
 
     }
 
@@ -53,6 +61,11 @@ class CheatActivity : AppCompatActivity() {
         answerTextView.visibility = View.VISIBLE
     }
 
+    private fun setCheated() {
+        val intent = Intent(baseContext, QuizActivity::class.java)
+        intent.putExtra(EXTRA_HAS_CHEATED, true)
+        setResult(Activity.RESULT_OK, intent)
+    }
 
     override fun onStart() {
         super.onStart()

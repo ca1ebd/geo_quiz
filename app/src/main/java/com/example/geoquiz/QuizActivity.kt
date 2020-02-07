@@ -1,5 +1,6 @@
 package com.example.geoquiz
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,12 +15,16 @@ import java.util.logging.Logger.global
 private const val LOG_TAG = "448.QuizActivity"
 private const val KEY_INDEX = "index"
 private const val KEY_SCORE = "score"
+private const val KEY_DID_CHEAT = "KEY_DID_CHEAT"
+private const val REQUEST_CODE_CHEAT = 0
 
 class QuizActivity : AppCompatActivity() {
 
     private lateinit var quizViewModel: QuizViewModel
     private lateinit var scoreTextView: TextView
     private lateinit var questionTextView: TextView
+
+    private var userDidCheat = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +36,7 @@ class QuizActivity : AppCompatActivity() {
 
         quizViewModel.currentQuestionIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?:0
         quizViewModel.score = savedInstanceState?.getInt(KEY_SCORE, 0) ?:0
+        userDidCheat = savedInstanceState?.getBoolean(KEY_DID_CHEAT, false) ?:false
 
         scoreTextView = findViewById(R.id.score_text_view)
         questionTextView = findViewById(R.id.question_text_view)
@@ -51,12 +57,27 @@ class QuizActivity : AppCompatActivity() {
         updateQuestion()
     }
 
+
     private fun launchCheat() {
         val intent = CheatActivity.createIntent(baseContext, quizViewModel.getCurrentAnswer())
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_CODE_CHEAT)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+        Log.d(LOG_TAG, "onActivityResult() called (requestCode: %s, resultCode: %s)".format(requestCode, resultCode))
+
+        if((resultCode == Activity.RESULT_OK) and (requestCode == REQUEST_CODE_CHEAT) and (data != null)){
+            userDidCheat = CheatActivity.didUserCheat(data)
+            Log.d(LOG_TAG, "the user ${ when(didCheat){
+                true -> "cheated"
+                false -> "did not cheat"
+            } }")
+
+
+        }
+    }
 
     override fun onStart() {
         super.onStart()
@@ -94,6 +115,10 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(answer: Boolean) {
+        when (userDidCheat) {
+            true -> Toast.makeText(baseContext, R.string.cheaters_no_prosper, Toast.LENGTH_SHORT).show()
+        }
+
         val toastStringID: Int = when (quizViewModel.isAnswerCorrect(answer)){
             true -> R.string.correct_toast
             false -> R.string.incorrect_toast
@@ -110,6 +135,7 @@ class QuizActivity : AppCompatActivity() {
             true -> quizViewModel.moveToNextQuestion()
             false -> quizViewModel.moveToPreviousQuestion()
         }
+        userDidCheat = false
         updateQuestion()
     }
 
@@ -118,6 +144,7 @@ class QuizActivity : AppCompatActivity() {
         Log.d(LOG_TAG, "onSaveInstanceState() called")
         outState.putInt(KEY_INDEX, quizViewModel.currentQuestionIndex)
         outState.putInt(KEY_SCORE, quizViewModel.currentScore)
+        outState.putBoolean(KEY_DID_CHEAT, userDidCheat)
     }
 
 
