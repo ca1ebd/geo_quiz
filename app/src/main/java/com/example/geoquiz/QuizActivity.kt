@@ -183,14 +183,21 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun activityHandleBooleanAnswer(answer: Boolean) {
+
+        when(quizViewModel.currentQuestion.hasAnswered){
+            false -> { //only show toast if not answered before
+                val toastStringID: Int = when (answer){
+                    true -> R.string.correct_toast
+                    false -> R.string.incorrect_toast
+                }
+                //show toast
+                Toast.makeText(baseContext, toastStringID, Toast.LENGTH_SHORT).show()
+            }
+        }
         quizViewModel.handleAnswer(answer)
         setCurrentScoreText()
-        val toastStringID: Int = when (answer){
-                true -> R.string.correct_toast
-                false -> R.string.incorrect_toast
-        }
-        //show toast
-        Toast.makeText(baseContext, toastStringID, Toast.LENGTH_SHORT).show()
+
+
     }
 
 
