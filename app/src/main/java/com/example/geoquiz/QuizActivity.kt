@@ -42,25 +42,25 @@ class QuizActivity : AppCompatActivity() {
 
         val trueButton = findViewById<Button>(R.id.true_button)
         val falseButton = findViewById<Button>(R.id.false_button)
-        trueButton.setOnClickListener { checkAnswer(true) }
-        falseButton.setOnClickListener { checkAnswer(false) }
+//        trueButton.setOnClickListener { checkAnswer(true) }
+//        falseButton.setOnClickListener { checkAnswer(false) }
 
         val prevButton = findViewById<Button>(R.id.prev_button)
         val nextButton = findViewById<Button>(R.id.next_button)
         prevButton.setOnClickListener { moveToQuestion(-1) }
         nextButton.setOnClickListener { moveToQuestion(1) }
 
-        val cheatButton = findViewById<Button>(R.id.cheat_button)
-        cheatButton.setOnClickListener { launchCheat() }
+//        val cheatButton = findViewById<Button>(R.id.cheat_button)
+//        cheatButton.setOnClickListener { launchCheat() }
 
         updateQuestion()
     }
 
 
-    private fun launchCheat() {
-        val intent = CheatActivity.createIntent(baseContext, quizViewModel.getCurrentAnswer())
-        startActivityForResult(intent, REQUEST_CODE_CHEAT)
-    }
+//    private fun launchCheat() {
+//        val intent = CheatActivity.createIntent(baseContext, quizViewModel.getCurrentAnswer())
+//        startActivityForResult(intent, REQUEST_CODE_CHEAT)
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -112,24 +112,22 @@ class QuizActivity : AppCompatActivity() {
         scoreTextView.text = quizViewModel.currentScore.toString()
     }
 
-    private fun checkAnswer(answer: Boolean) {
-        if (quizViewModel.didCheatOnQuestion) {
-            Toast.makeText(baseContext, R.string.cheaters_no_prosper, Toast.LENGTH_SHORT).show()
-        }
-        else{
-            val toastStringID: Int = when (quizViewModel.isAnswerCorrect(answer)){
-                true -> R.string.correct_toast
-                false -> R.string.incorrect_toast
-            }
-            //show toast
-            Toast.makeText(baseContext, toastStringID, Toast.LENGTH_SHORT).show()
-
-            //update the score
-            setCurrentScoreText()
-        }
-
-
-    }
+//    private fun checkAnswer(answer: Boolean) {
+//        if (quizViewModel.didCheatOnQuestion) {
+//            Toast.makeText(baseContext, R.string.cheaters_no_prosper, Toast.LENGTH_SHORT).show()
+//        }
+//        else{
+//            val toastStringID: Int = when (quizViewModel.isAnswerCorrect(answer)){
+//                true -> R.string.correct_toast
+//                false -> R.string.incorrect_toast
+//            }
+//            //show toast
+//            Toast.makeText(baseContext, toastStringID, Toast.LENGTH_SHORT).show()
+//
+//            //update the score
+//            setCurrentScoreText()
+//        }
+//    }
 
     private fun moveToQuestion(direction: Int) {
         when(direction>0){

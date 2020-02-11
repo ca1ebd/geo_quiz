@@ -1,8 +1,9 @@
 package com.example.geoquiz
 
-class Question(_textResId: Int,
-               _isAnswerTrue: Boolean) {
+abstract class Question(_textResId: Int) {
     val textResId = _textResId
-    val isAnswerTrue = _isAnswerTrue
     var hasCheated = false
+    var hasAnswered = false
+
+//    abstract fun checkAnswer(): Boolean
 }

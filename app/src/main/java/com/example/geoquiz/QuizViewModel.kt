@@ -9,9 +9,18 @@ class QuizViewModel : ViewModel() {
     public var currentQuestionIndex: Int = 0
 
     init {
-        questionBank.add(Question(R.string.question1, false))
-        questionBank.add(Question(R.string.question2, true))
-        questionBank.add(Question(R.string.question3, false))
+        questionBank.add(TrueFalseQuestion(R.string.TF_question1, false))
+        questionBank.add(MultipleChoiceQuestion(
+            R.string.MC_question4,
+            arrayListOf<Int>(
+                R.string.MC_question4_a1,
+                R.string.MC_question4_a2,
+                R.string.MC_question4_a3,
+                R.string.MC_question4_a4),
+            1))
+        questionBank.add(TrueFalseQuestion(R.string.TF_question2, true))
+        questionBank.add(TrueFalseQuestion(R.string.TF_question3, false))
+        questionBank.add(FillBlankQuestion(R.string.FB_question5, "Denver"))
     }
 
     private val currentQuestion: Question
@@ -20,8 +29,8 @@ class QuizViewModel : ViewModel() {
 
     val currentQuestionTextId: Int
         get() = currentQuestion.textResId
-    val currentQuestionAnswer: Boolean
-        get() = currentQuestion.isAnswerTrue
+//    val currentQuestionAnswer: Boolean
+//        get() = currentQuestion.isAnswerTrue
     val currentScore: Int
         get() = score
     var didCheatOnQuestion: Boolean
@@ -29,15 +38,15 @@ class QuizViewModel : ViewModel() {
         set(value) {currentQuestion.hasCheated = value}
 
 
-    fun isAnswerCorrect(check: Boolean): Boolean {
-        if(check == currentQuestionAnswer){
-            score++
-            return true
-        }
-        return false
-    }
+//    fun isAnswerCorrect(check: Boolean): Boolean {
+//        if(check == currentQuestionAnswer){
+//            score++
+//            return true
+//        }
+//        return false
+//    }
 
-    fun getCurrentAnswer() = currentQuestion.isAnswerTrue
+//    fun getCurrentAnswer() = currentQuestion.isAnswerTrue
 
     fun moveToNextQuestion() {
         currentQuestionIndex++

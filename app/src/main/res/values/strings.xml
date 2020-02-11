@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">Geo Quiz</string>
-    <string name="question1">Colorado School of Mines is located in South Bend, IN.</string>
-    <string name="question2">Caleb is a homie.</string>
-    <string name="question3">Mobile apps are easy</string>
+    <string name="TF_question1">Colorado School of Mines is located in South Bend, IN.</string>
+    <string name="TF_question2">Caleb is a homie.</string>
+    <string name="TF_question3">Mobile apps are easy</string>
+    <string name="MC_question4">Where does the president live?</string>
+    <string name="MC_question4_a1">Blue house</string>
+    <string name="MC_question4_a2">White house</string>
+    <string name="MC_question4_a3">Frat house</string>
+    <string name="MC_question4_a4">Dog house</string>
+    <string name="FB_question5">What is the capital of Colorado?</string>
+    <string name="FB_question5_a">Denver</string>
     <string name="falseString">False</string>
     <string name="trueString">True</string>
     <string name="score">Score: </string>
