@@ -22,4 +22,5 @@
     <string name="show_answer_button">Show the answer</string>
     <string name="cheat_button">Cheat</string>
     <string name="cheaters_no_prosper">Cheaters never prosper.</string>
+    <string name="answer">Answer</string>
 </resources>

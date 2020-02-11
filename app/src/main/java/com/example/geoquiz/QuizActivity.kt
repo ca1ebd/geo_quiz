@@ -4,13 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.lifecycle.ViewModelProvider
-import java.util.logging.Logger.global
 
 private const val LOG_TAG = "448.QuizActivity"
 private const val KEY_INDEX = "index"
@@ -23,6 +19,10 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var quizViewModel: QuizViewModel
     private lateinit var scoreTextView: TextView
     private lateinit var questionTextView: TextView
+    private lateinit var responseFrame: FrameLayout
+    private lateinit var trueFalseResponseLL: LinearLayout
+    private lateinit var multipleChoiceResponseLL: LinearLayout
+    private lateinit var textInputResponseLL: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +50,18 @@ class QuizActivity : AppCompatActivity() {
         prevButton.setOnClickListener { moveToQuestion(-1) }
         nextButton.setOnClickListener { moveToQuestion(1) }
 
-//        val cheatButton = findViewById<Button>(R.id.cheat_button)
+        val cheatButton = findViewById<Button>(R.id.cheat_button)
 //        cheatButton.setOnClickListener { launchCheat() }
+
+        //get objects for swappable layouts, holding frame
+        trueFalseResponseLL = layoutInflater.inflate(R.layout.true_false_response, null) as LinearLayout
+        multipleChoiceResponseLL = layoutInflater.inflate(R.layout.multiple_choice_response, null) as LinearLayout
+        textInputResponseLL = layoutInflater.inflate(R.layout.text_input_response, null) as LinearLayout
+//        trueFalseResponse = findViewById(R.id.true_false_response)
+        responseFrame = findViewById(R.id.response_holder)
+
+
+//        cheatButton.setOnClickListener { swapViews(responseFrame, multipleChoiceResponseLL)}
 
         updateQuestion()
     }
@@ -76,6 +86,13 @@ class QuizActivity : AppCompatActivity() {
 
         }
     }
+
+    //removes any views in parent and adds new view
+    private fun swapViews(parent: FrameLayout, newView: LinearLayout) {
+        parent.removeAllViews()
+        parent.addView(newView)
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -106,6 +123,7 @@ class QuizActivity : AppCompatActivity() {
     private fun updateQuestion() {
         setCurrentScoreText()
         questionTextView.text = resources.getString(quizViewModel.currentQuestionTextId)
+//        when()
     }
 
     private fun setCurrentScoreText() {
