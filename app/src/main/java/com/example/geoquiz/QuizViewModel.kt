@@ -23,9 +23,12 @@ class QuizViewModel : ViewModel() {
         questionBank.add(FillBlankQuestion(R.string.FB_question5, "Denver"))
     }
 
-    private val currentQuestion: Question
+    val currentQuestion: Question
         //return the question from the list at the current index
         get() = questionBank[currentQuestionIndex]
+
+    val currentQuestionType: Question.QuestionType
+        get() = currentQuestion.questionType
 
     val currentQuestionTextId: Int
         get() = currentQuestion.textResId
@@ -47,6 +50,15 @@ class QuizViewModel : ViewModel() {
 //    }
 
 //    fun getCurrentAnswer() = currentQuestion.isAnswerTrue
+
+    fun handleAnswer(answer: Boolean){
+        when(answer){
+            true -> when(currentQuestion.hasAnswered){
+                false -> score++
+            }
+        }
+        currentQuestion.hasAnswered = true
+    }
 
     fun moveToNextQuestion() {
         currentQuestionIndex++

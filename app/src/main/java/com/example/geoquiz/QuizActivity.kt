@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.true_false_response.*
 
 private const val LOG_TAG = "448.QuizActivity"
 private const val KEY_INDEX = "index"
@@ -123,8 +124,75 @@ class QuizActivity : AppCompatActivity() {
     private fun updateQuestion() {
         setCurrentScoreText()
         questionTextView.text = resources.getString(quizViewModel.currentQuestionTextId)
-//        when()
+        when(quizViewModel.currentQuestionType){
+            Question.QuestionType.TRUE_FALSE -> swapViews(responseFrame, trueFalseResponseLL)
+            Question.QuestionType.TEXT -> swapViews(responseFrame, textInputResponseLL)
+            Question.QuestionType.MULTIPLE_CHOICE -> swapViews(responseFrame, multipleChoiceResponseLL)
+        }
+        setUpFunction()
     }
+
+    private fun setUpFunction() {
+        //set up to check answers
+        when(quizViewModel.currentQuestionType) {
+            Question.QuestionType.TRUE_FALSE -> {
+                val trueButton = trueFalseResponseLL.findViewById<Button>(R.id.true_button)
+                val falseButton = trueFalseResponseLL.findViewById<Button>(R.id.false_button)
+
+                trueButton.setOnClickListener {
+                    val answer = (quizViewModel.currentQuestion as TrueFalseQuestion).checkAnswer(true)
+                    activityHandleBooleanAnswer(answer)
+                }
+                falseButton.setOnClickListener {
+                    val answer = (quizViewModel.currentQuestion as TrueFalseQuestion).checkAnswer(false)
+                    activityHandleBooleanAnswer(answer)
+                }
+            }
+            Question.QuestionType.TEXT -> {
+                val editText = textInputResponseLL.findViewById<EditText>(R.id.text_response_edit_text)
+                val submitButton = textInputResponseLL.findViewById<Button>(R.id.submit_button)
+                submitButton.setOnClickListener {
+                    val answer = (quizViewModel.currentQuestion as FillBlankQuestion).checkAnswer(editText.text.toString())
+                    activityHandleBooleanAnswer(answer)
+                }
+            }
+            Question.QuestionType.MULTIPLE_CHOICE -> {
+                val button1 = multipleChoiceResponseLL.findViewById<Button>(R.id.button1)
+                val button2 = multipleChoiceResponseLL.findViewById<Button>(R.id.button2)
+                val button3 = multipleChoiceResponseLL.findViewById<Button>(R.id.button3)
+                val button4 = multipleChoiceResponseLL.findViewById<Button>(R.id.button4)
+                var buttons = arrayListOf<Button>(button1, button2, button3, button4)
+                for(button in buttons){
+                    val buttonIndex = when(button.id){
+                        R.id.button1 -> 0
+                        R.id.button2 -> 1
+                        R.id.button3 -> 2
+                        R.id.button4 -> 3
+                        else -> -1
+                    }
+                    val currentQuestion = (quizViewModel.currentQuestion as MultipleChoiceQuestion)
+                    button.text = getString(currentQuestion.getResIdOfAnswerAtIndex(buttonIndex))
+                    button.setOnClickListener {
+                        val answer = currentQuestion.checkAnswer(buttonIndex)
+                        activityHandleBooleanAnswer(answer)
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun activityHandleBooleanAnswer(answer: Boolean) {
+        quizViewModel.handleAnswer(answer)
+        setCurrentScoreText()
+        val toastStringID: Int = when (answer){
+                true -> R.string.correct_toast
+                false -> R.string.incorrect_toast
+        }
+        //show toast
+        Toast.makeText(baseContext, toastStringID, Toast.LENGTH_SHORT).show()
+    }
+
 
     private fun setCurrentScoreText() {
         scoreTextView.text = quizViewModel.currentScore.toString()
